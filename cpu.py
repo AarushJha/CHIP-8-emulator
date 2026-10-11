@@ -44,7 +44,7 @@ class CPU:
 
     def emulate_cycle(self):
         # Fetch 2-byte opcode
-        opcode = (self.memory[self.pc] << 8) | self.memory[self.pc] + 1
+        opcode = (self.memory[self.pc] << 8) | self.memory[self.pc + 1]
         self.pc += 2
 
         # --- DECODE AND EXECUTE OPCODES GO HERE ---
