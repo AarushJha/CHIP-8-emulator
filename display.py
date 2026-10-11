@@ -1,21 +1,17 @@
 class Display:
     def __init__(self):
-        # Create a 32-row by 64-column grid explicitly
-        self.screen = []
-        for _ in range(32):
-            row = [0 for _ in range(64)]
-            self.screen.append(row)
-
+        # 64 columns by 32 rows, initialized to 0 (off)
+        self.screen = [[0 for _ in range(64)] for _ in range(32)]
+    
     def clear(self):
-        self.screen = []
-        for _ in range(32):
-            row = [0 for _ in range(64)]
-            self.screen.append(row)
+        self.screen = [[0 for _ in range(64)] for _ in range(32)]
 
     def set_pixel(self, x, y):
-        """Draws a pixel using XOR. Returns True if a pixel is erased (collision/VF)."""
+        #Draws a pixel using XOR. Returns True if a pixel is erased 
+        #wrap around edges if coordinates exceed boundaries
         x %= 64
-        y %= 32
-        
+        y %=32
+
         self.screen[y][x] ^= 1
-        return self.screen[y][x] == 0  # True if collision occurred
+        return self.screen[y][x] == 0 #True if colison occured
+    
