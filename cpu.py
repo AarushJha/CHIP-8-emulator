@@ -29,7 +29,7 @@ class CPU:
         self.sp = 0
 
         self.delay_timer = 0
-        self.dsound_timer = 0
+        self.sound_timer = 0
 
         self.display = display
         self.keypad = keypad
