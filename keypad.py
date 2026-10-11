@@ -1,6 +1,6 @@
 import pygame
 
-class keypad:
+class Keypad:
     def __init__(self):
         self.keys = [0] * 16 # 16 keys -> 0 to F
 

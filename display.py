@@ -1,4 +1,4 @@
-class display:
+class Display:
     def __init__(self):
         # 64 columns by 32 rows, initialized to 0 (off)
         self.screen = [[0 for _ in range(64)] for _ in range(32)]
