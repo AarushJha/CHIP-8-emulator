@@ -133,3 +133,11 @@ class CPU:
 
         else:
             print(f"Unimplemented opcode: {hex(opcode)}")
+
+    def load_rom(self, filepath):
+        with open(filepath, "rb") as f:
+            rom_data = f.read()
+            # Copy ROM bytes into memory starting at address 0x200 (512)
+            self.memory[0x200 : 0x200 + len(rom_data)] = rom_data
+        # Set program counter to start execution at 0x200
+        self.pc = 0x200
