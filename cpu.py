@@ -43,6 +43,13 @@ class CPU:
             self.memory[0x200:0x200 + len(rom_data)] = rom_data
 
     def emulate_cycle(self):
+        # Stop execution if Program Counter goes beyond memory bounds
+        if self.pc >= len(self.memory) - 1:
+            return
+
+        # Fetch 2-byte opcode
+        opcode = (self.memory[self.pc] << 8) | self.memory[self.pc + 1]
+        self.pc += 2
         # Fetch 2-byte opcode
         opcode = (self.memory[self.pc] << 8) | self.memory[self.pc + 1]
         self.pc += 2
