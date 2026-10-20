@@ -47,7 +47,45 @@ class CPU:
         opcode = (self.memory[self.pc] << 8) | self.memory[self.pc + 1]
         self.pc += 2
 
-        # --- DECODE AND EXECUTE OPCODES GO HERE ---
-        # Example: 0x00E0 clears the screen
+        # Decode opcode categories based on the first nibble
+        # Extract common nibbles/values for convenience
+        nnn = opcode & 0x0FFF
+        nn = opcode & 0x00FF
+        x = (opcode & 0x0F00) >> 8
+        y = (opcode & 0x00F0) >> 4
+        n = opcode & 0x000F
+
+        # Match opcodes
         if opcode == 0x00E0:
+            # 00E0: Clear the display
             self.display.clear()
+
+        elif opcode == 0x00EE:
+            # 00EE: Return from a subroutine
+            self.sp -= 1
+            self.pc = self.stack[self.sp]
+
+        elif (opcode & 0xF000) == 0x1000:
+            # 1NNN: Jump to address NNN
+            self.pc = nnn
+
+        elif (opcode & 0xF000) == 0x2000:
+            # 2NNN: Call subroutine at NNN
+            self.stack[self.sp] = self.pc
+            self.sp += 1
+            self.pc = nnn
+
+        elif (opcode & 0xF000) == 0x6000:
+            # 6XNN: Set register VX to NN
+            self.v[x] = nn
+
+        elif (opcode & 0xF000) == 0x7000:
+            # 7XNN: Add NN to register VX (without carrying VF)
+            self.v[x] = (self.v[x] + nn) & 0xFF
+
+        elif (opcode & 0xF000) == 0xA000:
+            # ANNN: Set index register I to NNN
+            self.i = nnn
+
+        else:
+            print(f"Unimplemented opcode: {hex(opcode)}")
