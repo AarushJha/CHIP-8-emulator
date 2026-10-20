@@ -87,5 +87,42 @@ class CPU:
             # ANNN: Set index register I to NNN
             self.i = nnn
 
+        elif (opcode & 0xF000) == 0x3000:
+            # 3XNN: Skip next instruction if VX equals NN
+            if self.v[x] == nn:
+                self.pc += 2
+
+        elif (opcode & 0xF000) == 0x4000:
+            # 4XNN: Skip next instruction if VX does not equal NN
+            if self.v[x] != nn:
+                self.pc += 2
+
+        elif (opcode & 0xF000) == 0x5000:
+            # 5XY0: Skip next instruction if VX equals VY
+            if self.v[x] == self.v[y]:
+                self.pc += 2
+
+        elif (opcode & 0xF000) == 0x9000:
+            # 9XY0: Skip next instruction if VX does not equal VY
+            if self.v[x] != self.v[y]:
+                self.pc += 2
+
+        elif (opcode & 0xF000) == 0xD000:
+            # DXYN: Draw a sprite at coordinate (VX, VY) with height N
+            x_coord = self.v[x]
+            y_coord = self.v[y]
+            height = n
+            
+            # Reset VF (collision flag) to 0
+            self.v[0xF] = 0
+            
+            # Fetch sprite data from memory starting at index I
+            sprite_bytes = self.memory[self.i : self.i + height]
+            
+            # Pass data to display module and check for pixel collision
+            pixel_collision = self.display.draw_sprite(x_coord, y_coord, sprite_bytes)
+            if pixel_collision:
+                self.v[0xF] = 1
+
         else:
             print(f"Unimplemented opcode: {hex(opcode)}")
